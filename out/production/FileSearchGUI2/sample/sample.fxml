@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
@@ -29,9 +30,10 @@
       <Text fx:id="SearchTermIdentifier" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Term:" translateY="-30.0" GridPane.rowIndex="1" />
       <TextField fx:id="SearchTermField" GridPane.rowIndex="1" />
       <Button fx:id="SearchButton" mnemonicParsing="false" onAction="#Search" text="Search" translateY="45.0" GridPane.rowIndex="1" />
-      <Text fx:id="FilesSearchedText" strokeType="OUTSIDE" strokeWidth="0.0" text=" " GridPane.columnIndex="2" />
-      <Text fx:id="ResultsFoundText" strokeType="OUTSIDE" strokeWidth="0.0" text=" " GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Text fx:id="FilesSearchedText" strokeType="OUTSIDE" strokeWidth="0.0" text=" " translateX="100.0" GridPane.columnIndex="2" />
+      <Text fx:id="ResultsFoundText" strokeType="OUTSIDE" strokeWidth="0.0" text=" " translateX="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       <ListView fx:id="listOfFiles" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
       <Label fx:id="BUY" text="Label" translateY="25.0" />
+      <ComboBox fx:id="searchType" prefWidth="150.0" GridPane.rowIndex="2" />
    </children>
 </GridPane>
