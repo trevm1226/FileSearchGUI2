@@ -1,7 +1,5 @@
 package sample;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,16 +9,10 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * TODO: 4/4/2018
@@ -51,9 +43,10 @@ public class Controller implements Initializable{
     @FXML private ComboBox<String> searchType;
 
     private List<File> fileList;
-    private File dir;
     private String searchTerm;
     private File selectedDirectory;
+
+    private dataContainer contents;
 
 
     public void setStage(Stage stage) {
@@ -63,6 +56,7 @@ public class Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         searchType.getItems().addAll("Exact Match", "Contains", "Best Match", "ReGeX");
+        contents = new dataContainer(SearchBar, SearchTermField, FilesSearchedText, ResultsFoundText, listOfFiles, BUY, stage, searchType);
     }
 
     public void OpenFIleExplorer(ActionEvent actionEvent) throws IOException {
@@ -72,13 +66,11 @@ public class Controller implements Initializable{
         if(selectedDirectory.equals(null))
             System.out.println("no directory selected");
         BUY.setText(selectedDirectory.getAbsolutePath());
-        dir = selectedDirectory;
     }
 
     public void Search(ActionEvent actionEvent) throws IOException {
         FilesSearchedText.setText("0");
         ResultsFoundText.setText("0");
-        searcher dingdong = new searcher(listOfFiles, FilesSearchedText, ResultsFoundText, searchTerm, SearchTermField, selectedDirectory, searchType, SearchBar);
-        dingdong.start();
+        new Thread(new searcher(contents, searchTerm, selectedDirectory)).start();
     }
 }

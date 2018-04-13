@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class searcher extends Thread {
+public class searcher implements Runnable {
     private ListView listOfFiles;
     private Text FilesSearchedText;
     private Text ResultsFoundText;
@@ -30,16 +30,16 @@ public class searcher extends Thread {
     private ComboBox<String> searchType;
     private ProgressBar SearchBar;
 
-    public searcher(ListView listOfFiles, Text FilesSearchedText, Text ResultsFoundText, String searchTerm, TextField SearchTermField, File selectedDirectory, ComboBox<String> searchType, ProgressBar SearchBar)
+    public searcher(dataContainer container, String search, File dire)
     {
-        this.listOfFiles = listOfFiles;
-        this.FilesSearchedText = FilesSearchedText;
-        this.ResultsFoundText = ResultsFoundText;
-        this.searchTerm = searchTerm;
-        this.SearchTermField = SearchTermField;
-        this.selectedDirectory = selectedDirectory;
-        this.searchType = searchType;
-        this.SearchBar = SearchBar;
+        this.listOfFiles = container.getListOfFiles();
+        this.FilesSearchedText = container.getFilesSearchedText();
+        this.ResultsFoundText = container.getResultsFoundText();
+        this.searchTerm = search;
+        this.SearchTermField = container.getSearchTermField();
+        this.selectedDirectory = dire;
+        this.searchType = container.getSearchType();
+        this.SearchBar = container.getSearchBar();
     }
 
     public ObservableList<File> regexSearch(ObservableList<File> list)
