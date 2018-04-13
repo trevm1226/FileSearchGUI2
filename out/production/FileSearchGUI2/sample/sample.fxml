@@ -35,5 +35,6 @@
       <ListView fx:id="listOfFiles" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
       <Label fx:id="BUY" text="Label" translateY="25.0" />
       <ComboBox fx:id="searchType" prefWidth="150.0" GridPane.rowIndex="2" />
+      <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveToFile" text="Save As" translateX="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
 </GridPane>

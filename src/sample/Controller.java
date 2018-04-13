@@ -8,8 +8,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -71,6 +70,29 @@ public class Controller implements Initializable{
     public void Search(ActionEvent actionEvent) throws IOException {
         FilesSearchedText.setText("0");
         ResultsFoundText.setText("0");
-        new Thread(new searcher(contents, searchTerm, selectedDirectory)).start();
+        //new Thread(new searcher(contents, searchTerm, selectedDirectory)).start();
+        searcher kk = new searcher(contents, searchTerm, selectedDirectory);
+        kk.start();
+    }
+
+    public void saveToFile(ActionEvent actionEvent) {
+        saveFile();
+    }
+
+    public void saveFile(){
+
+        try{
+            FileWriter fw = new FileWriter("saveFile.txt",false);
+            BufferedWriter bf = new BufferedWriter(fw);
+            PrintWriter out = new PrintWriter(fw,true);
+            for(Object e :listOfFiles.getItems()){
+                out.println(e);
+            }
+            out.close();
+        }
+        catch(IOException e){
+
+        }
+
     }
 }

@@ -9,9 +9,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class searcher implements Runnable {
+public class searcher extends Thread {
     private ListView listOfFiles;
     private Text FilesSearchedText;
     private Text ResultsFoundText;
@@ -29,6 +27,10 @@ public class searcher implements Runnable {
     private File selectedDirectory;
     private ComboBox<String> searchType;
     private ProgressBar SearchBar;
+    private int filesSearched, filesFound;
+    private List<File> filesInFolder;
+    private static searcher instance;
+
 
     public searcher(dataContainer container, String search, File dire)
     {
@@ -40,6 +42,23 @@ public class searcher implements Runnable {
         this.selectedDirectory = dire;
         this.searchType = container.getSearchType();
         this.SearchBar = container.getSearchBar();
+    }
+
+    public static searcher create(dataContainer conten, String search, File dire)
+    {
+        searcher ret = new searcher(conten, search, dire);
+//        if(instance != null){
+//            instance.cancel();
+//            try{
+//                instance.join();
+//            }
+//            catch(InterruptedException e){
+//                e.printStackTrace();
+//            }
+//        }
+        instance = ret;
+        return ret;
+
     }
 
     public ObservableList<File> regexSearch(ObservableList<File> list)
@@ -117,14 +136,14 @@ public class searcher implements Runnable {
     public void run()
     {
         listOfFiles.getItems().clear();
-        int filesSearched = 0;
-        int filesFound = 0;
+        filesSearched = 0;
+        filesFound = 0;
         searchTerm = SearchTermField.getText();
 
-        List<File> filesInFolder = null;
+        filesInFolder = null;
         try {
             filesInFolder = Files.walk(Paths.get(selectedDirectory.getAbsolutePath())).filter(Files::isRegularFile).map(Path::toFile).collect(Collectors.toList());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -134,10 +153,16 @@ public class searcher implements Runnable {
         for(File temp:list)
         {
 
+            Platform.runLater(() -> {
+                System.out.println("ok1");
+                FilesSearchedText.setText(filesSearched++ + "");
+                SearchBar.setProgress(filesSearched/filesInFolder.size());
+            });
             if(searchType.getValue().equals("Exact Match") && (temp.getName().equals(searchTerm)))
             {
                 listOfFiles.getItems().add(temp);
                 filesFound++;
+
             }
             if(searchType.getValue().equals("Contains") && (temp.getName().contains(searchTerm)))
             {
@@ -154,13 +179,13 @@ public class searcher implements Runnable {
                 listOfFiles.setItems(regexSearch(list));
                 filesFound++;
             }
-            final int tempint = filesSearched++;
-            final int otherint = filesFound;
+
             Platform.runLater(() -> {
-                FilesSearchedText.setText(tempint+"");
-                ResultsFoundText.setText(otherint+"");
-                if(listOfFiles.getItems().size() != 0)SearchBar.setProgress(tempint/listOfFiles.getItems().size());
+                System.out.println("ok2");
+                ResultsFoundText.setText(filesFound + "");
             });
         }
     }
+
+
 }
