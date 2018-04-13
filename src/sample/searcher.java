@@ -156,13 +156,10 @@ public class searcher extends Thread {
             }
             final int tempint = filesSearched++;
             final int otherint = filesFound;
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    FilesSearchedText.setText(tempint+"");
-                    ResultsFoundText.setText(otherint+"");
-                    SearchBar.setProgress(tempint/listOfFiles.getItems().size());
-                }
+            Platform.runLater(() -> {
+                FilesSearchedText.setText(tempint+"");
+                ResultsFoundText.setText(otherint+"");
+                if(listOfFiles.getItems().size() != 0)SearchBar.setProgress(tempint/listOfFiles.getItems().size());
             });
         }
     }
